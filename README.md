@@ -1,150 +1,140 @@
-# 📊 Análise de Séries Temporais — Fundamentos Teóricos
+# Análise de Séries Temporais — Fundamentos Teóricos
 
-Este repositório tem como objetivo estudar e aplicar **modelos clássicos de séries temporais**, analisando propriedades como **estacionariedade**, **tendência** e **sazonalidade**, e explorando os principais modelos estatísticos da família **ARIMA**: **AR**, **ARMA** e **SARIMA**.
+Este repositório tem como objetivo estudar e aplicar **modelos clássicos de séries temporais**, analisando propriedades como **estacionariedade**, **tendência** e **sazonalidade**, e explorando os principais modelos estatísticos da família **ARIMA**: **AR**, **ARMA**, **SARIMA** e **SARIMAX**.
 
 ---
 
-## 🧠 O que é uma Série Temporal?
+##  O que é uma Série Temporal?
 
 Uma **série temporal** é um conjunto de observações coletadas ao longo do tempo em intervalos regulares — por exemplo, vendas mensais, temperatura diária ou número de acessos por hora.  
-O foco desse tipo de análise é entender **como o tempo influencia os dados** e construir modelos capazes de **prever valores futuros**.
+O foco da análise é entender **como o tempo influencia os dados** e construir modelos capazes de **prever valores futuros**.
 
 As séries temporais costumam apresentar três componentes principais:
 
 1. **Tendência:** direção de longo prazo (crescimento ou queda).
-2. **Sazonalidade:** padrões que se repetem periodicamente (ex: vendas que sobem todo dezembro).
+2. **Sazonalidade:** padrões que se repetem periodicamente (ex: aumento de vendas em dezembro).
 3. **Ruído:** variações aleatórias não explicadas por tendência nem sazonalidade.
 
 ---
 
-## ⚖️ Estacionariedade
+##  Estacionariedade
 
-Um dos conceitos mais importantes em séries temporais é a **estacionariedade**.
-
-Uma série é **estacionária** quando suas propriedades estatísticas — como média, variância e covariância — **não mudam ao longo do tempo**.  
-Em outras palavras, ela **oscila em torno de um valor constante**, sem tendência ou padrões sazonais persistentes.
+Uma série é considerada **estacionária** quando suas propriedades estatísticas — como média, variância e covariância — **não mudam ao longo do tempo**.  
+Em outras palavras, ela oscila em torno de uma média constante e não apresenta tendência ou sazonalidade persistente.
 
 Por que isso é importante?  
-➡️ Modelos como **AR**, **ARMA** e **SARIMA** partem da suposição de que os relacionamentos entre períodos passados e futuros **são estáveis**.  
-Se a série não for estacionária, o modelo pode gerar previsões enganosas.
+Modelos como **AR**, **ARMA**, **SARIMA** e **SARIMAX** assumem que as relações entre períodos passados e futuros **são estáveis**.  
+Se a série não for estacionária, o modelo pode gerar previsões imprecisas.
 
-### 🔍 Como testar a estacionariedade?
+### Como testar a estacionariedade?
 
 Existem dois testes estatísticos principais:
 
 - **ADF (Augmented Dickey-Fuller):**  
-  - Hipótese nula: a série **não é estacionária**.  
-  - Se o *p-valor* < 0.05 → rejeita-se a hipótese nula → a série **é estacionária**.
+  Hipótese nula: a série não é estacionária.  
+  Se o p-valor < 0.05, rejeita-se a hipótese nula e conclui-se que a série é estacionária.
 
 - **KPSS (Kwiatkowski–Phillips–Schmidt–Shin):**  
-  - Hipótese nula: a série **é estacionária**.  
-  - Se o *p-valor* < 0.05 → rejeita-se a hipótese nula → a série **não é estacionária**.
+  Hipótese nula: a série é estacionária.  
+  Se o p-valor < 0.05, rejeita-se a hipótese nula e conclui-se que a série não é estacionária.
 
-O ideal é que:
-> O ADF indique estacionariedade e o KPSS **não a rejeite**, confirmando o resultado.
-
----
-
-## 🔁 Diferenciação
-
-A **diferenciação** é o processo de **remover tendências e tornar a série estacionária**.
-
-Ela consiste em subtrair o valor atual pelo valor anterior:
-
-\[
-Y'_t = Y_t - Y_{t-1}
-\]
-
-Essa transformação elimina a dependência linear de longo prazo, estabilizando a média da série.  
-Se ainda houver tendência ou padrão sazonal, podem ser aplicadas **diferenciações adicionais**, tanto simples quanto sazonais.
-
-- **d:** número de diferenciações não sazonais (remove tendência).  
-- **D:** número de diferenciações sazonais (remove padrões periódicos).  
-
-Após aplicar a diferenciação, é comum **refazer os testes de estacionariedade** para confirmar o resultado antes da modelagem.
+O ideal é que o teste ADF indique estacionariedade e o KPSS não a rejeite, confirmando a consistência do resultado.
 
 ---
 
-## 🔄 Sazonalidade
+##  Diferenciação
 
-A **sazonalidade** representa **padrões que se repetem em intervalos fixos de tempo** — por exemplo:
+A **diferenciação** é o processo utilizado para **remover tendências** e tornar a série estacionária.  
+Ela consiste em subtrair o valor atual do valor anterior, reduzindo a dependência de longo prazo e estabilizando a média da série.
 
-- Aumento no consumo de energia durante o verão.  
-- Queda de vendas após feriados.  
-- Ciclos econômicos anuais ou trimestrais.
+- **d:** número de diferenciações aplicadas para remover tendência.  
+- **D:** número de diferenciações sazonais para eliminar padrões periódicos.
 
-Detectar e modelar corretamente a sazonalidade é essencial para previsões mais realistas.  
-Ela pode ser identificada visualmente (gráficos) ou por meio de funções estatísticas como **ACF** (Autocorrelation Function), que mostra correlações entre períodos separados por certo intervalo de tempo.
-
----
-
-## ⚙️ Modelos de Séries Temporais
-
-### 🔹 AR (AutoRegressive)
-
-O modelo **AR(p)** supõe que o valor atual da série depende linearmente de **p observações anteriores**.
-
-\[
-Y_t = c + \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + ... + \phi_p Y_{t-p} + \varepsilon_t
-\]
-
-- **p:** número de defasagens (lags) consideradas.  
-- **ϕ:** coeficientes que medem o impacto de cada valor passado.  
-- **ε:** ruído branco (erro aleatório).
-
-Ele é indicado para séries estacionárias que apresentam **autocorrelação significativa** entre valores próximos no tempo.
+Após aplicar a diferenciação, é comum refazer os testes de estacionariedade para confirmar se a série está pronta para modelagem.
 
 ---
 
-### 🔹 ARMA (AutoRegressive Moving Average)
+##  Sazonalidade
+
+A **sazonalidade** ocorre quando há **padrões que se repetem em intervalos regulares de tempo**, como:
+
+- aumento nas vendas no final do ano;  
+- maior consumo de energia durante o verão;  
+- ciclos de produção agrícola a cada estação.
+
+Identificar e modelar corretamente a sazonalidade é fundamental para previsões mais realistas.  
+Ela pode ser observada em gráficos de linha e confirmada por funções como a **ACF** (autocorrelação), que mostra a relação entre valores de diferentes períodos.
+
+---
+
+##  Modelos de Séries Temporais
+
+### 1. AR (AutoRegressive)
+
+O modelo **AR(p)** supõe que o valor atual de uma série depende linearmente de um número definido de **valores passados**.  
+É indicado para séries estacionárias que apresentam autocorrelação significativa entre observações próximas.
+
+---
+
+### 2. ARMA (AutoRegressive Moving Average)
 
 O modelo **ARMA(p, q)** combina dois componentes:
 
-- **AR(p):** dependência dos valores passados.  
-- **MA(q):** dependência dos erros passados (médias móveis dos resíduos).
+- **AR (AutoRegressivo):** dependência dos valores passados;  
+- **MA (Média Móvel):** dependência dos erros passados.
 
-\[
-Y_t = c + \sum_{i=1}^{p}\phi_i Y_{t-i} + \sum_{j=1}^{q}\theta_j \varepsilon_{t-j} + \varepsilon_t
-\]
-
-- **p:** número de termos autorregressivos.  
-- **q:** número de termos de média móvel.  
-
-O **ARMA** é adequado para séries **estacionárias e não sazonais**.
+Esse modelo é ideal para séries **estacionárias e não sazonais**, nas quais há padrões de dependência de curto prazo.
 
 ---
 
-### 🔹 SARIMA (Seasonal ARIMA)
+### 3. SARIMA (Seasonal ARIMA)
 
-O **SARIMA(p, d, q)(P, D, Q, s)** é uma generalização do ARIMA que inclui **componentes sazonais**.
+O modelo **SARIMA(p, d, q)(P, D, Q, s)** é uma generalização do ARIMA que considera **componentes sazonais**.  
+Ele modela tanto as relações de curto prazo (não sazonais) quanto as de longo prazo (sazonais), sendo amplamente utilizado em previsões reais.
 
-Ele modela tanto as **relações de curto prazo** (não sazonais) quanto as **de longo prazo** (sazonais), sendo um dos modelos mais completos e utilizados em previsão.
+- **p, d, q:** parâmetros não sazonais (autorregressivo, diferenciação, média móvel).  
+- **P, D, Q:** parâmetros sazonais.  
+- **s:** período da sazonalidade (por exemplo, 12 para dados mensais com padrão anual).
 
-- **p, d, q:** componentes não sazonais (autorregressivo, diferenciação, média móvel).  
-- **P, D, Q:** componentes sazonais (autorregressivo, diferenciação, média móvel).  
-- **s:** período da sazonalidade (ex: 12 para dados mensais com ciclo anual).
-
-Essa combinação permite capturar tendências e padrões repetitivos de forma robusta.
-
----
-
-## 🧾 Resumo Comparativo
-
-| Modelo | Usa valores passados | Usa erros passados | Considera sazonalidade | Requer série estacionária |
-|:--------|:----------------------|:--------------------|:-------------------------|:---------------------------|
-| **AR** | ✔️ | ❌ | ❌ | ✔️ |
-| **ARMA** | ✔️ | ✔️ | ❌ | ✔️ |
-| **SARIMA** | ✔️ | ✔️ | ✔️ | ⚙️ (obtida via diferenciação) |
+O SARIMA é especialmente útil em séries que apresentam **tendência e padrões periódicos**, como vendas, temperatura ou produção industrial.
 
 ---
 
-## 🧩 Conclusão
+### 4. SARIMAX (Seasonal ARIMA com Exogenous)
 
-- **Estacionariedade** é a base para qualquer modelagem temporal confiável.  
-- **Diferenciação** é o método para estabilizar séries e remover tendências.  
-- **Sazonalidade** precisa ser reconhecida e modelada quando há padrões periódicos.  
-- Os modelos **AR**, **ARMA** e **SARIMA** evoluem em complexidade conforme incorporam dependências e sazonalidades.  
+O modelo **SARIMAX** é uma extensão direta do **SARIMA**, mas com um recurso adicional:  
+ele permite incluir **variáveis exógenas (X)** — ou seja, fatores externos que também influenciam a série.
 
-Esses fundamentos são essenciais para análises preditivas robustas e interpretações estatísticas corretas em qualquer projeto de séries temporais.
+Essas variáveis podem representar eventos, campanhas, indicadores econômicos ou qualquer outro fator externo que ajude o modelo a compreender melhor os padrões da série.
+
+Exemplos de uso:
+
+- Prever vendas considerando também **gastos com marketing**.  
+- Estimar demanda levando em conta **temperatura ou feriados**.  
+- Projetar consumo energético com base em **índices de produção industrial**.
+
+Em resumo:
+> O **SARIMAX** é o mesmo modelo **SARIMA**, mas com um parâmetro adicional que permite incorporar variáveis externas (exógenas), tornando-o mais flexível e realista.
 
 ---
+
+##  Resumo Comparativo
+
+| Modelo | Usa valores passados | Usa erros passados | Considera sazonalidade | Aceita variáveis externas | Requer série estacionária |
+|:--------|:----------------------|:--------------------|:-------------------------|:----------------------------|:---------------------------|
+| **AR** | ✔️ | ❌ | ❌ | ❌ | ✔️ |
+| **ARMA** | ✔️ | ✔️ | ❌ | ❌ | ✔️ |
+| **SARIMA** | ✔️ | ✔️ | ✔️ | ❌ | ⚙️ (obtida via diferenciação) |
+| **SARIMAX** | ✔️ | ✔️ | ✔️ | ✔️ | ⚙️ (obtida via diferenciação) |
+
+---
+
+##  Conclusão
+
+- **Estacionariedade** é essencial para que o modelo capture relações temporais consistentes.  
+- **Diferenciação** é o principal método para remover tendências e estabilizar a série.  
+- **Sazonalidade** deve ser identificada e modelada quando houver padrões periódicos claros.  
+- O **SARIMAX** amplia o SARIMA, permitindo considerar **variáveis externas** que afetam o comportamento da série.  
+- Juntos, esses modelos formam uma base sólida para análises e previsões temporais confiáveis.
+
+Esses fundamentos são a base para qualquer projeto de previsão temporal robusto e servem como guia para os notebooks e scripts deste repositório.
